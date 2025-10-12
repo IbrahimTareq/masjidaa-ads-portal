@@ -22,7 +22,6 @@ export async function middleware(request: NextRequest) {
   return response;
 }
 
-// Apply to all app routes
 export const config = {
   matcher: [
     "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",

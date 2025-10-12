@@ -12,6 +12,7 @@ export default function NewAdPage() {
   const router = useRouter();
 
   const [form, setForm] = useState({
+    title: "",
     message: "",
     masjid_id: "",
   });
@@ -43,7 +44,7 @@ export default function NewAdPage() {
 
         const masjids = data ?? [];
 
-        const masjidIds = masjids.map((m) => m.id);
+        const masjidIds = masjids.map((m: any) => m.id);
         const { data: adSettings } = await supabase
           .from("masjid_ads")
           .select("masjid_id, allow_ads")
@@ -51,7 +52,7 @@ export default function NewAdPage() {
           .eq("allow_ads", true);
 
         const allowedIds = adSettings?.map((a) => a.masjid_id) || [];
-        const filtered = masjids.filter((m) => allowedIds.includes(m.id));
+        const filtered = masjids.filter((m: any) => allowedIds.includes(m.id));
 
         setMasjidResults(filtered);
       } catch (err) {
@@ -94,22 +95,27 @@ export default function NewAdPage() {
       }
     }
 
-    const temp = await supabase.from("ad_requests").insert({
+    await supabase.from("ad_requests").insert({
       business_id: business?.id,
       masjid_id: form.masjid_id,
+      title: form.title,
       message: form.message,
       image: imageUrl,
       status: "pending",
     });
-
-    console.log('temp:', temp);
 
     router.push("/business");
   };
 
   return (
     <div className="max-w-xl mx-auto p-6 space-y-4">
-      <h1 className="text-2xl font-semibold">Create New Ad</h1>
+      <div>
+        <h1 className="text-2xl font-semibold">Create New Ad</h1>
+        <p className="text-sm text-muted-foreground">
+          Your business details along with the message and image will be
+          displayed in the selected masjid&apos;s display and app screens.
+        </p>
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Masjid Search */}
@@ -153,11 +159,19 @@ export default function NewAdPage() {
           )}
         </div>
 
+        {/* Title */}
+        <div className="space-y-1">
+          <label className="text-sm font-medium text-foreground">Title</label>
+          <Input
+            placeholder="Enter a title for your ad..."
+            value={form.title}
+            onChange={(e) => setForm({ ...form, title: e.target.value })}
+          />
+        </div>
+
         {/* Message */}
         <div className="space-y-1">
-          <label className="text-sm font-medium text-foreground">
-            Message
-          </label>
+          <label className="text-sm font-medium text-foreground">Message</label>
           <Textarea
             placeholder="Write your ad message..."
             rows={4}

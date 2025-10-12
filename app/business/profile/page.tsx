@@ -38,8 +38,14 @@ export default function BusinessProfilePage() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 space-y-4">
-      <h1 className="text-2xl font-semibold">Business Profile</h1>
+    <div className="max-w-3xl mx-auto p-6 space-y-4">
+      <div>
+        <h1 className="text-2xl font-semibold">Business Profile</h1>
+        <p className="text-sm text-muted-foreground">
+          Ensure your business profile is up to date so that the ads show the
+          right business details.
+        </p>
+      </div>
 
       <Input
         placeholder="Business name"
@@ -68,7 +74,7 @@ export default function BusinessProfilePage() {
         }
       />
 
-      <Button onClick={handleSave}>Save</Button>
+      <Button className="w-full" onClick={handleSave}>Save</Button>
     </div>
   );
 }
