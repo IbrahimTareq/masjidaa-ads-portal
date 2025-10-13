@@ -26,7 +26,7 @@ export function LoginForm() {
       });
       if (error) throw error;
       // Update this route to redirect to an authenticated route. The user already has an active session.
-      router.push("/protected");
+      router.push("/");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
@@ -106,7 +106,7 @@ export function LoginForm() {
         {/* Sign Up Link */}
         <p className="mt-4 text-center text-sm">
           Don&apos;t have an account?&nbsp;
-          <Link href="/" className="underline underline-offset-4">
+          <Link href="/auth/sign-up" className="underline underline-offset-4">
             Sign up
           </Link>
         </p>

@@ -42,8 +42,8 @@ export default function BusinessProfilePage() {
       <div>
         <h1 className="text-2xl font-semibold">Business Profile</h1>
         <p className="text-sm text-muted-foreground">
-          Ensure your business profile is up to date so that the ads show the
-          right business details.
+          Ensure your business profile is up to date as the ads in the masjids
+          display and app screens will show your business details.
         </p>
       </div>
 
@@ -74,7 +74,9 @@ export default function BusinessProfilePage() {
         }
       />
 
-      <Button className="w-full" onClick={handleSave}>Save</Button>
+      <Button className="w-full" onClick={handleSave}>
+        Save
+      </Button>
     </div>
   );
 }

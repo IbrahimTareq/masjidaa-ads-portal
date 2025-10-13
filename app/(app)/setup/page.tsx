@@ -13,7 +13,9 @@ export default function BusinessSetupPage() {
   const [form, setForm] = useState({
     name: "",
     description: "",
+    address: "",
     website: "",
+    contact_phone: "",
     contact_email: "",
   });
 
@@ -27,7 +29,9 @@ export default function BusinessSetupPage() {
         user_id: user?.user?.id,
         name: form.name,
         description: form.description,
+        address: form.address,
         website: form.website,
+        contact_phone: form.contact_phone,
         contact_email: form.contact_email,
       })
       .select("id")
@@ -47,7 +51,7 @@ export default function BusinessSetupPage() {
       }),
     });
 
-    router.push("/business");
+    router.push("/");
   };
 
   return (
@@ -71,9 +75,19 @@ export default function BusinessSetupPage() {
           required
         />
         <Input
+          placeholder="Address"
+          value={form.address}
+          onChange={(e) => setForm({ ...form, address: e.target.value })}
+        />
+        <Input
           placeholder="Website"
           value={form.website}
           onChange={(e) => setForm({ ...form, website: e.target.value })}
+        />
+        <Input
+          placeholder="Contact phone"
+          value={form.contact_phone}
+          onChange={(e) => setForm({ ...form, contact_phone: e.target.value })}
         />
         <Input
           placeholder="Contact email"
