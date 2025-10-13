@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Globe, Phone, Mail, MapPin } from "lucide-react";
+import StripePaymentWrapper from "./StripePaymentWrapper";
 
 export default async function AdDetailsPage({
   params,
@@ -9,7 +10,7 @@ export default async function AdDetailsPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  
+
   const supabase = await createClient();
   const { data: ad } = await supabase
     .from("ad_requests")
@@ -65,7 +66,9 @@ export default async function AdDetailsPage({
 
         {ad.rejected_reason && (
           <div>
-            <label className="text-sm text-muted-foreground">Rejected Reason</label>
+            <label className="text-sm text-muted-foreground">
+              Rejected Reason
+            </label>
             <div className="mt-1 px-3 py-2 border rounded-md bg-muted/30">
               {ad.rejected_reason}
             </div>
@@ -81,22 +84,44 @@ export default async function AdDetailsPage({
         </div>
       </div>
 
-      {ad.status === "approved" && (
-        <div className="border-t pt-6 space-y-2">
-          <h2 className="text-lg font-medium">Complete Payment</h2>
-          <div className="px-3 py-4 border rounded-md bg-muted/20 text-sm text-muted-foreground">
-            Stripe payment goes here
+      {/* Payment Section */}
+      {/* Show payment section only if not paid yet */}
+      {["approved", "paid"].includes(ad.status) &&
+        ad.stripe_payment_intent_id && (
+          <div className="border-t pt-6 space-y-2">
+            <h2 className="text-lg font-medium">Complete Payment</h2>
+
+            {ad.status === "live" ? (
+              <div className="p-4 border rounded-md bg-green-50 text-green-700 space-y-1">
+                <p className="font-medium text-sm">
+                  ✅ Payment has already been completed.
+                </p>
+                <p className="text-xs">
+                  Your ad is now live and visible on the masjid’s display
+                  screen.
+                </p>
+              </div>
+            ) : (
+              <>
+                <p className="text-sm text-muted-foreground">
+                  Please complete your payment below to activate your ad.
+                </p>
+                <StripePaymentWrapper
+                  paymentIntentId={ad.stripe_payment_intent_id}
+                />
+              </>
+            )}
           </div>
-        </div>
-      )}
+        )}
 
       {/* Ad Preview Section */}
       <div className="border-t pt-6">
         <h2 className="text-lg font-medium">Ad Preview</h2>
         <p className="text-sm text-muted-foreground">
-          This is how your ad will appear to users in the masjid&apos;s display screen.
+          This is how your ad will appear to users in the masjid&apos;s display
+          screen.
         </p>
-        
+
         <div className="border rounded-lg overflow-hidden bg-white text-black mt-4">
           <section className="relative w-full font-sans py-6">
             {/* Header Section */}
@@ -106,12 +131,13 @@ export default async function AdDetailsPage({
                 <div className="w-full md:w-1/2 mb-4 md:mb-0">
                   <p className="text-xl md:text-2xl font-bold leading-tight mb-2">
                     {ad.businesses?.name || ad.title}{" "}
-                    <span className="text-gray-500 text-xs">(Sponsored Ad)</span>
+                    <span className="text-gray-500 text-xs">
+                      (Sponsored Ad)
+                    </span>
                   </p>
 
                   {/* Contact Details */}
                   <div className="text-gray-700 text-sm leading-relaxed space-y-2">
-                    {/* Row 1: Website + Phone */}
                     <div className="flex flex-wrap items-center gap-4">
                       {ad.businesses?.website && (
                         <div className="flex items-center gap-1">
@@ -127,7 +153,6 @@ export default async function AdDetailsPage({
                       )}
                     </div>
 
-                    {/* Row 2: Email + Address */}
                     <div className="flex flex-wrap items-center gap-4">
                       {ad.businesses?.contact_email && (
                         <div className="flex items-center gap-1">
@@ -152,7 +177,6 @@ export default async function AdDetailsPage({
               </div>
             </div>
 
-            {/* Image Section */}
             {ad.image && (
               <div className="w-full px-6 mt-4">
                 <div className="w-full rounded-lg overflow-hidden flex items-center justify-center bg-gray-100">
