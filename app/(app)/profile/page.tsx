@@ -26,7 +26,7 @@ export default function BusinessProfilePage() {
       if (data) setProfile(data);
     };
     load();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSave = async () => {
     const { data: user } = await supabase.auth.getUser();

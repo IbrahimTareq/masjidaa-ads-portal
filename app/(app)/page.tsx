@@ -1,6 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
-import { CheckCheck, ClockFading, Hash, HeartPlus, Hourglass, Plus, Repeat, Settings } from "lucide-react";
+import { CheckCheck, ClockFading, Hash, Plus, Settings } from "lucide-react";
 import Link from "next/link";
+
+type AdRequest = {
+  id: string;
+  title: string;
+  status: string;
+  created_at: string;
+  masjid: { id: string; name: string } | null;
+};
 
 export default async function BusinessDashboard() {
   const supabase = await createClient();
@@ -31,6 +39,12 @@ export default async function BusinessDashboard() {
 
   if (adsError) console.error("Ads fetch error:", adsError);
 
+  // ✅ Normalize Supabase relation (can sometimes return an array)
+  const normalizedAds = ads?.map((ad) => ({
+    ...ad,
+    masjid: Array.isArray(ad.masjid) ? ad.masjid[0] ?? null : ad.masjid,
+  })) as AdRequest[];
+
   return (
     <div className="w-full p-6">
       <header>
@@ -54,7 +68,7 @@ export default async function BusinessDashboard() {
             <div className="flex items-end gap-3">
               <Hash className="h-6 w-6 text-theme mb-2" />
               <p className="text-7xl font-semibold text-theme-gradient leading-none">
-                {ads?.length}
+                {normalizedAds?.length ?? 0}
               </p>
             </div>
             <p className="text-sm text-gray-500 mt-2">Total Ads</p>
@@ -64,7 +78,7 @@ export default async function BusinessDashboard() {
             <div className="flex items-end gap-3">
               <ClockFading className="h-6 w-6 text-theme mb-2" />
               <p className="text-7xl font-semibold text-theme-gradient leading-none">
-                {ads?.filter((ad) => ad.status === "pending").length}
+                {normalizedAds?.filter((ad) => ad.status === "pending").length ?? 0}
               </p>
             </div>
             <p className="text-sm text-gray-500 mt-2">Pending Ads</p>
@@ -74,14 +88,14 @@ export default async function BusinessDashboard() {
             <div className="flex items-end gap-3">
               <CheckCheck className="h-6 w-6 text-theme mb-2" />
               <p className="text-7xl font-semibold text-theme-gradient leading-none">
-                {ads?.filter((ad) => ad.status === "approved").length}
+                {normalizedAds?.filter((ad) => ad.status === "approved").length ?? 0}
               </p>
             </div>
             <p className="text-sm text-gray-500 mt-2">Active Ads</p>
           </div>
         </div>
 
-        {/* Right side button */}
+        {/* Right side buttons */}
         <div className="flex space-x-4">
           <Link
             href="/profile"
@@ -106,8 +120,8 @@ export default async function BusinessDashboard() {
       <div className="mt-6">
         <h2 className="text-lg font-medium">Your Ads</h2>
         <div className="border rounded-lg divide-y mt-4">
-          {ads?.length ? (
-            ads.map((ad) => (
+          {normalizedAds?.length ? (
+            normalizedAds.map((ad: AdRequest) => (
               <Link
                 key={ad.id}
                 href={`/ads/${ad.id}`}

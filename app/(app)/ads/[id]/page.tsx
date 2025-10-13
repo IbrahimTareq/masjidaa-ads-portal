@@ -6,13 +6,15 @@ import { Globe, Phone, Mail, MapPin } from "lucide-react";
 export default async function AdDetailsPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
+  
   const supabase = await createClient();
   const { data: ad } = await supabase
     .from("ad_requests")
     .select("*, masjids(name), businesses(*)")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (!ad) return notFound();

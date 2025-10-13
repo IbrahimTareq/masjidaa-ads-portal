@@ -1,6 +1,7 @@
 // middleware.ts
 import { updateSession } from "@/lib/supabase/middleware";
 import { NextResponse, type NextRequest } from "next/server";
+import { createClient } from "./lib/supabase/server";
 
 export async function middleware(request: NextRequest) {
   // Let Supabase refresh or validate the user's session
@@ -12,11 +13,9 @@ export async function middleware(request: NextRequest) {
   // ---- STEP 1: Read Supabase session from request cookies ----
   // Supabase sets its own auth cookie automatically:
   // sb-[PROJECT_REF]-auth-token
-  const authCookie = request.cookies
-    .getAll()
-    .find((cookie) => cookie.name.startsWith("sb-") && cookie.name.endsWith("-auth-token"));
-
-  const hasSession = Boolean(authCookie?.value);
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getClaims();
+  const hasSession = data?.claims !== null;
 
   // ---- STEP 2: If user is authenticated, block /auth/* ----
   if (path.startsWith("/auth")) {
