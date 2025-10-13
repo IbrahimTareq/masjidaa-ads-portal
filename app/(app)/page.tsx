@@ -78,7 +78,8 @@ export default async function BusinessDashboard() {
             <div className="flex items-end gap-3">
               <ClockFading className="h-6 w-6 text-theme mb-2" />
               <p className="text-7xl font-semibold text-theme-gradient leading-none">
-                {normalizedAds?.filter((ad) => ad.status === "pending").length ?? 0}
+                {normalizedAds?.filter((ad) => ad.status === "pending")
+                  .length ?? 0}
               </p>
             </div>
             <p className="text-sm text-gray-500 mt-2">Pending Ads</p>
@@ -88,7 +89,8 @@ export default async function BusinessDashboard() {
             <div className="flex items-end gap-3">
               <CheckCheck className="h-6 w-6 text-theme mb-2" />
               <p className="text-7xl font-semibold text-theme-gradient leading-none">
-                {normalizedAds?.filter((ad) => ad.status === "approved").length ?? 0}
+                {normalizedAds?.filter((ad) => ad.status === "approved")
+                  .length ?? 0}
               </p>
             </div>
             <p className="text-sm text-gray-500 mt-2">Active Ads</p>
@@ -139,7 +141,7 @@ export default async function BusinessDashboard() {
                         className={
                           ad.status === "pending"
                             ? "text-orange-500 font-medium"
-                            : ad.status === "approved"
+                            : ad.status === "approved" || ad.status === "live"
                             ? "text-green-600 font-medium"
                             : ad.status === "rejected"
                             ? "text-red-500 font-medium"

@@ -16,9 +16,9 @@ export default function StripePaymentWrapper({
       try {
         const res = await fetch(`/api/stripe/intent/${paymentIntentId}`);
         if (!res.ok) throw new Error("Failed to fetch client secret");
-        const data = await res.json();
+        const data = await res.json() as { client_secret: string };
         setClientSecret(data.client_secret);
-      } catch (error) {
+      } catch (error: unknown) {
         console.error(error);
       } finally {
         setLoading(false);
