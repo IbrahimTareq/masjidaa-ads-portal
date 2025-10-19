@@ -25,7 +25,9 @@ export default async function AdDetailsPage({
       <header>
         <h1 className="text-2xl font-semibold">Ad Details</h1>
         <p className="text-sm text-muted-foreground">
-          View the full details of your ad request below.
+          View the full details of your ad request below. When your ad is
+          approved, there will be a payment section below to complete the
+          payment. The ad will go live only after the payment is confirmed.
         </p>
       </header>
 
@@ -53,7 +55,7 @@ export default async function AdDetailsPage({
             className={`mt-1 px-3 py-2 border rounded-md uppercase font-medium ${
               ad.status === "pending"
                 ? "bg-orange-100 text-orange-600 border-orange-200"
-                : ad.status === "approved"
+                : ad.status === "approved" || ad.status === "live"
                 ? "bg-green-100 text-green-700 border-green-200"
                 : ad.status === "rejected"
                 ? "bg-red-100 text-red-600 border-red-200"
@@ -86,19 +88,15 @@ export default async function AdDetailsPage({
 
       {/* Payment Section */}
       {/* Show payment section only if not paid yet */}
-      {["approved", "paid"].includes(ad.status) &&
+      {["approved", "paid", "payment_failed"].includes(ad.status) &&
         ad.stripe_payment_intent_id && (
           <div className="border-t pt-6 space-y-2">
             <h2 className="text-lg font-medium">Complete Payment</h2>
 
-            {ad.status === "live" ? (
+            {ad.status === "paid" ? (
               <div className="p-4 border rounded-md bg-green-50 text-green-700 space-y-1">
                 <p className="font-medium text-sm">
                   ✅ Payment has already been completed.
-                </p>
-                <p className="text-xs">
-                  Your ad is now live and visible on the masjid’s display
-                  screen.
                 </p>
               </div>
             ) : (

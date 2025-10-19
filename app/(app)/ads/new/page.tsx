@@ -24,6 +24,7 @@ interface Masjid {
   id: string;
   name: string;
   address_label: string;
+  ad_price?: number;
 }
 
 export default function NewAdPage() {
@@ -100,12 +101,20 @@ export default function NewAdPage() {
         const masjidIds = masjids.map((m) => m.id);
         const { data: adSettings } = await supabase
           .from("masjid_ads")
-          .select("masjid_id, allow_ads")
+          .select("masjid_id, allow_ads, ad_price")
           .in("masjid_id", masjidIds)
           .eq("allow_ads", true);
 
         const allowedIds = adSettings?.map((a) => a.masjid_id) || [];
-        const filtered = masjids.filter((m) => allowedIds.includes(m.id));
+        const priceMap =
+          adSettings?.reduce((acc, setting) => {
+            acc[setting.masjid_id] = setting.ad_price;
+            return acc;
+          }, {} as Record<string, number>) || {};
+
+        const filtered = masjids
+          .filter((m) => allowedIds.includes(m.id))
+          .map((m) => ({ ...m, ad_price: priceMap[m.id] }));
 
         setMasjidResults(filtered);
       } catch (err) {
@@ -168,8 +177,8 @@ export default function NewAdPage() {
           Your business details, message, and image will appear on the selected
           masjid&apos;s display and app screens. Please note that ad details
           cannot be edited after submission. Once your ad is approved by the
-          masjid, you&apos;ll be prompted to complete the payment. The ad will
-          go live only after the payment is confirmed.
+          masjid, you will be notified via email to complete the payment. The ad
+          will go live only after the payment is confirmed.
         </p>
       </div>
 
@@ -206,9 +215,14 @@ export default function NewAdPage() {
                   className="p-2 cursor-pointer hover:bg-muted"
                 >
                   <p className="font-medium">{m.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {m.address_label}
-                  </p>
+                  <div className="flex justify-between">
+                    <p className="text-xs text-muted-foreground">
+                      {m.address_label}
+                    </p>
+                    <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                      ${(m.ad_price ? m.ad_price / 100 : 100).toFixed(2)}/month
+                    </p>
+                  </div>
                 </li>
               ))}
             </ul>
