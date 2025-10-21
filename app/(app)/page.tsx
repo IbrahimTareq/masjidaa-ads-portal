@@ -131,10 +131,7 @@ export default async function BusinessDashboard() {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    {/* ✅ Masjid name */}
                     <p className="font-medium">{ad.title}</p>
-
-                    {/* ✅ Status + Created date */}
                     <p className="text-sm text-muted-foreground">
                       Masjid: {ad.masjid?.name ?? "Unknown masjid"} • Status:{" "}
                       <span
