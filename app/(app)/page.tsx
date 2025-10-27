@@ -142,21 +142,24 @@ export default async function BusinessDashboard() {
                             ? "text-orange-500 font-medium"
                             : ad.status === "approved" || ad.status === "live"
                             ? "text-green-600 font-medium"
-                            : ad.status === "rejected" || ad.status === "payment_failed"
+                            : ad.status === "rejected" ||
+                              ad.status === "payment_failed"
                             ? "text-red-500 font-medium"
                             : "text-muted-foreground"
                         }
                       >
-                        {ad.status === "payment_failed" 
+                        {ad.status === "payment_failed"
                           ? "Payment Failed"
-                          : ad.status === "live" 
-                          ? "Live" 
-                          : ad.status === "approved" 
-                          ? "Approved" 
-                          : ad.status === "expired" 
-                          ? "Expired" 
-                          : ad.status === "pending" 
-                          ? "Pending" 
+                          : ad.status === "live"
+                          ? "Live"
+                          : ad.status === "approved"
+                          ? "Approved"
+                          : ad.status === "rejected"
+                          ? "Rejected"
+                          : ad.status === "expired"
+                          ? "Expired"
+                          : ad.status === "pending"
+                          ? "Pending"
                           : ad.status}
                       </span>
                       &nbsp; • Date Submitted:&nbsp;
