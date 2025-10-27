@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { Globe, Phone, Mail, MapPin } from "lucide-react";
+import { Globe, Mail, MapPin, Phone } from "lucide-react";
 import { Metadata } from "next";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export const metadata: Metadata = {
   title: "Create New Ad - Masjidaa Ads Portal",
@@ -170,7 +170,6 @@ export default function NewAdPage() {
       message: form.message,
       image: imageUrl,
       status: "pending",
-      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days
     });
 
     router.push("/");

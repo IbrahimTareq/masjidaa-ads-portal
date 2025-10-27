@@ -168,12 +168,16 @@ export default async function BusinessDashboard() {
                         month: "2-digit",
                         year: "2-digit",
                       })}
-                      &nbsp; • Date Expires:&nbsp;
-                      {new Date(ad.expires_at).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "2-digit",
-                      })}
+                      {ad.status === "approved" || ad.status === "live" && (
+                        <>
+                          &nbsp; • Date Expires:&nbsp;
+                          {new Date(ad.expires_at).toLocaleDateString("en-GB", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "2-digit",
+                          })}
+                        </>
+                      )}
                     </p>
                   </div>
                 </div>
