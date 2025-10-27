@@ -7,6 +7,7 @@ type AdRequest = {
   title: string;
   status: string;
   created_at: string;
+  expires_at: string;
   masjid: { id: string; name: string } | null;
 };
 
@@ -31,6 +32,7 @@ export default async function BusinessDashboard() {
       title,
       status,
       created_at,
+      expires_at,
       masjid:masjid_id (id, name)
     `
     )
@@ -140,15 +142,35 @@ export default async function BusinessDashboard() {
                             ? "text-orange-500 font-medium"
                             : ad.status === "approved" || ad.status === "live"
                             ? "text-green-600 font-medium"
-                            : ad.status === "rejected"
+                            : ad.status === "rejected" || ad.status === "payment_failed"
                             ? "text-red-500 font-medium"
                             : "text-muted-foreground"
                         }
                       >
-                        {ad.status}
-                      </span>{" "}
-                      • Date Submitted:{" "}
-                      {new Date(ad.created_at).toLocaleDateString()}
+                        {ad.status === "payment_failed" 
+                          ? "Payment Failed"
+                          : ad.status === "live" 
+                          ? "Live" 
+                          : ad.status === "approved" 
+                          ? "Approved" 
+                          : ad.status === "expired" 
+                          ? "Expired" 
+                          : ad.status === "pending" 
+                          ? "Pending" 
+                          : ad.status}
+                      </span>
+                      &nbsp; • Date Submitted:&nbsp;
+                      {new Date(ad.created_at).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "2-digit",
+                      })}
+                      &nbsp; • Date Expires:&nbsp;
+                      {new Date(ad.expires_at).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "2-digit",
+                      })}
                     </p>
                   </div>
                 </div>
