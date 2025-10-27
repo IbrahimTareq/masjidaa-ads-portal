@@ -5,15 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/lib/supabase/client";
 import { Globe, Mail, MapPin, Phone } from "lucide-react";
-import { Metadata } from "next";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
-export const metadata: Metadata = {
-  title: "Create New Ad - Masjidaa Ads Portal",
-  description: "Create a new ad request",
-};
 
 // Define types for better type safety
 interface BusinessProfile {

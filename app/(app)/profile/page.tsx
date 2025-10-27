@@ -5,12 +5,6 @@ import { createClient } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Business Profile - Masjidaa Ads Portal",
-  description: "Manage your business profile",
-};
 
 export default function BusinessProfilePage() {
   const supabase = createClient();
