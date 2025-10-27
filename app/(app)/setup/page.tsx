@@ -4,8 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/lib/supabase/client";
+import { Metadata } from "next";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
+export const metadata: Metadata = {
+  title: "Business Setup - Masjidaa Ads Portal",
+  description: "Create your business profile",
+};
 
 export default function BusinessSetupPage() {
   const supabase = createClient();

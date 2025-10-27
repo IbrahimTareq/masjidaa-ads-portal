@@ -8,6 +8,12 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Globe, Phone, Mail, MapPin } from "lucide-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Create New Ad - Masjidaa Ads Portal",
+  description: "Create a new ad request",
+};
 
 // Define types for better type safety
 interface BusinessProfile {
@@ -294,7 +300,7 @@ export default function NewAdPage() {
         </p>
 
         <div className="border rounded-lg overflow-hidden bg-white text-black mt-4">
-          <section className="relative w-full font-sans py-6">
+          <section className="relative w-full font-sans pb-6">
             {/* Header Section */}
             <div className="w-full">
               <div className="flex flex-col md:flex-row items-start justify-between w-full px-6 py-4">

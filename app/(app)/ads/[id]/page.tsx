@@ -3,6 +3,12 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Globe, Phone, Mail, MapPin } from "lucide-react";
 import StripePaymentWrapper from "./StripePaymentWrapper";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Ad Details - Masjidaa Ads Portal",
+  description: "View the full details of your ad request",
+};
 
 export default async function AdDetailsPage({
   params,

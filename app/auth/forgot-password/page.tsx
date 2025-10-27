@@ -1,4 +1,10 @@
 import { ForgotPasswordForm } from "@/components/forgot-password-form";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Forgot Password - Masjidaa Ads Portal",
+  description: "Reset your password",
+};
 
 export default function Page() {
   return (
