@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 const stripe = new Stripe(process.env.STRIPE_CONNECT_SECRET_KEY!, {
   apiVersion: "2025-09-30.clover",
+  httpClient: Stripe.createFetchHttpClient() // Required for Cloudflare Workers (https://github.com/stripe/stripe-node/issues/650#issuecomment-2324744424)
 });
 
 export async function GET(

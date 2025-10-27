@@ -14,12 +14,19 @@ export default function StripePaymentWrapper({
   useEffect(() => {
     async function fetchClientSecret() {
       try {
+        console.log("Fetching client secret for payment intent:", paymentIntentId);
         const res = await fetch(`/api/stripe/intent/${paymentIntentId}`);
-        if (!res.ok) throw new Error("Failed to fetch client secret");
+        console.log("Response status:", res.status);
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          console.error("Failed to fetch client secret:", errorData);
+          throw new Error("Failed to fetch client secret");
+        }
         const data = await res.json() as { client_secret: string };
+        console.log("Client secret fetched successfully");
         setClientSecret(data.client_secret);
       } catch (error: unknown) {
-        console.error(error);
+        console.error("Error fetching client secret:", error);
       } finally {
         setLoading(false);
       }
