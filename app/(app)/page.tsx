@@ -91,7 +91,7 @@ export default async function BusinessDashboard() {
             <div className="flex items-end gap-3">
               <CheckCheck className="h-6 w-6 text-theme mb-2" />
               <p className="text-7xl font-semibold text-theme-gradient leading-none">
-                {normalizedAds?.filter((ad) => ad.status === "approved")
+                {normalizedAds?.filter((ad) => ad.status === "live")
                   .length ?? 0}
               </p>
             </div>

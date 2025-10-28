@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/lib/supabase/client";
-import { Globe, Mail, MapPin, Phone } from "lucide-react";
+import { Globe, Loader2, Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -45,6 +45,7 @@ export default function NewAdPage() {
   const [hasSelectedMasjid, setHasSelectedMasjid] = useState(false);
   const [businessProfile, setBusinessProfile] =
     useState<BusinessProfile | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // --- Load business profile ---
   useEffect(() => {
@@ -131,42 +132,48 @@ export default function NewAdPage() {
   // --- Handle form submission ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
-    const { data: user } = await supabase.auth.getUser();
-    const { data: business } = await supabase
-      .from("businesses")
-      .select("id")
-      .eq("user_id", user?.user?.id)
-      .single();
+    try {
+      const { data: user } = await supabase.auth.getUser();
+      const { data: business } = await supabase
+        .from("businesses")
+        .select("id")
+        .eq("user_id", user?.user?.id)
+        .single();
 
-    let imageUrl: string | null = null;
+      let imageUrl: string | null = null;
 
-    if (imageFile) {
-      const filePath = `ads/${Date.now()}-${imageFile.name}`;
-      const { error: uploadError } = await supabase.storage
-        .from("ad-images")
-        .upload(filePath, imageFile);
-
-      if (!uploadError) {
-        const { data: publicUrlData } = supabase.storage
+      if (imageFile) {
+        const filePath = `ads/${Date.now()}-${imageFile.name}`;
+        const { error: uploadError } = await supabase.storage
           .from("ad-images")
-          .getPublicUrl(filePath);
-        imageUrl = publicUrlData.publicUrl;
-      } else {
-        console.error("Image upload failed:", uploadError);
+          .upload(filePath, imageFile);
+
+        if (!uploadError) {
+          const { data: publicUrlData } = supabase.storage
+            .from("ad-images")
+            .getPublicUrl(filePath);
+          imageUrl = publicUrlData.publicUrl;
+        } else {
+          console.error("Image upload failed:", uploadError);
+        }
       }
+
+      await supabase.from("ad_requests").insert({
+        business_id: business?.id,
+        masjid_id: form.masjid_id,
+        title: form.title,
+        message: form.message,
+        image: imageUrl,
+        status: "pending",
+      });
+
+      router.push("/");
+    } catch (error) {
+      console.error("Error submitting ad request:", error);
+      setIsSubmitting(false);
     }
-
-    await supabase.from("ad_requests").insert({
-      business_id: business?.id,
-      masjid_id: form.masjid_id,
-      title: form.title,
-      message: form.message,
-      image: imageUrl,
-      status: "pending",
-    });
-
-    router.push("/");
   };
 
   return (
@@ -278,9 +285,16 @@ export default function NewAdPage() {
         <Button
           type="submit"
           className="w-full"
-          disabled={!form.masjid_id || !form.message}
+          disabled={!form.masjid_id || !form.message || isSubmitting}
         >
-          Submit Ad Request
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Submitting...
+            </>
+          ) : (
+            "Submit Ad Request"
+          )}
         </Button>
       </form>
 
