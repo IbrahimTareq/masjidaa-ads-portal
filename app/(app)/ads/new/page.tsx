@@ -169,6 +169,20 @@ export default function NewAdPage() {
         status: "pending",
       });
 
+      const { error: notificationError } = await supabase
+        .from("masjid_notifications")
+        .insert({
+          masjid_id: form.masjid_id,
+          notification_type: "ads",
+          notification_data: "You have a new ad request.",
+          is_read: false,
+        });
+
+      if (notificationError) {
+        console.error("Error creating notification:", notificationError);
+        // Don't fail the whole operation if notification fails
+      }
+
       router.push("/");
     } catch (error) {
       console.error("Error submitting ad request:", error);
